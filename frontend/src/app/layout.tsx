@@ -65,9 +65,16 @@ export const viewport: Viewport = {
   ],
 };
 
+/** Blocking script injected into <head> — prevents flash of wrong theme before hydration */
+const themeScript = `(function(){try{var t=localStorage.getItem('ccc-theme');var d=document.documentElement;if(t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches)){d.classList.add('dark');d.setAttribute('data-theme','dark');}else{d.classList.remove('dark');d.setAttribute('data-theme','light');}}catch(e){}})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth`}>
+      {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="bg-white dark:bg-[#0a0a0f] min-h-screen flex flex-col font-sans antialiased transition-colors duration-300">
         <Providers>
           <AuthProvider>
