@@ -6,8 +6,9 @@ import { Providers }     from "@/providers";
 import Header            from "@/app/components/common/Header";
 import Sidebar           from "@/app/components/common/Sidebar";
 import Footer            from "@/app/components/common/Footer";
-import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
-import { env }           from "@/lib/env";
+import { ErrorBoundary }    from "@/components/ui/ErrorBoundary";
+import { WhatsAppButton }   from "@/components/shared/WhatsAppButton";
+import { env }              from "@/lib/env";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -89,6 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </ErrorBoundary>
           </AuthProvider>
+          <WhatsAppButton />
         </Providers>
       </body>
     </html>

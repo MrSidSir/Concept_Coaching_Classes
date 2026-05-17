@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import SidBookstoreLink from "./dashboard/componentsApp/SidBookstoreLink";
 import { Card } from "@/components/ui/Card";
+import { SocialLinks } from "@/components/shared/SocialLinks";
+import { SOCIAL_LINKS, BRAND, whatsappChatUrl } from "@/constants/socials";
+import { FaPhone, FaWhatsapp, FaYoutube } from "react-icons/fa";
 
 const API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY!;
 const CHANNEL_ID = process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_ID!;
@@ -249,6 +252,79 @@ export default function Home() {
         <Link href="/register" className="inline-block px-8 sm:px-10 py-3 bg-yellow-400 text-blue-900 rounded-xl font-bold text-sm sm:text-base hover:bg-yellow-300 transition shadow-lg tap-highlight-none">
           Join Now — It&apos;s Free!
         </Link>
+      </section>
+
+      {/* ── Contact / Social Section ── */}
+      <section className="py-12 sm:py-16 px-4 bg-white dark:bg-[#0a0a0f]">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-black text-gray-900 dark:text-white mb-2">
+              Connect With Us
+            </h2>
+            <p className="text-gray-500 dark:text-slate-400 text-sm">
+              Reach out on any platform — we reply fast!
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* WhatsApp */}
+            <a
+              href={whatsappChatUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center gap-3 p-6 rounded-2xl border border-gray-100 dark:border-[#33334b] bg-white dark:bg-[#1a1a28] hover:border-[#25D366]/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-[#25D366]/10 flex items-center justify-center group-hover:bg-[#25D366]/20 transition-colors">
+                <FaWhatsapp className="text-2xl text-[#25D366]" />
+              </div>
+              <div className="text-center">
+                <p className="font-semibold text-gray-900 dark:text-white text-sm">WhatsApp</p>
+                <p className="text-xs text-gray-400 mt-0.5">Chat directly</p>
+              </div>
+            </a>
+
+            {/* Phone */}
+            <a
+              href={SOCIAL_LINKS.phoneHref}
+              className="group flex flex-col items-center gap-3 p-6 rounded-2xl border border-gray-100 dark:border-[#33334b] bg-white dark:bg-[#1a1a28] hover:border-blue-400/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-500/20 transition-colors">
+                <FaPhone className="text-2xl text-blue-600 dark:text-blue-400" />
+              </div>
+              <div className="text-center">
+                <p className="font-semibold text-gray-900 dark:text-white text-sm">Call Us</p>
+                <p className="text-xs text-gray-400 mt-0.5">{SOCIAL_LINKS.phone}</p>
+              </div>
+            </a>
+
+            {/* YouTube */}
+            <a
+              href={SOCIAL_LINKS.youtube}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex flex-col items-center gap-3 p-6 rounded-2xl border border-gray-100 dark:border-[#33334b] bg-white dark:bg-[#1a1a28] hover:border-red-400/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-red-50 dark:bg-red-500/10 flex items-center justify-center group-hover:bg-red-100 dark:group-hover:bg-red-500/20 transition-colors">
+                <FaYoutube className="text-2xl text-[#FF0000]" />
+              </div>
+              <div className="text-center">
+                <p className="font-semibold text-gray-900 dark:text-white text-sm">YouTube</p>
+                <p className="text-xs text-gray-400 mt-0.5">Free lectures</p>
+              </div>
+            </a>
+
+            {/* All Social */}
+            <div className="flex flex-col items-center gap-3 p-6 rounded-2xl border border-gray-100 dark:border-[#33334b] bg-white dark:bg-[#1a1a28]">
+              <p className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-1">
+                Follow Us
+              </p>
+              <SocialLinks size="md" gap="gap-3" />
+              <p className="text-xs text-gray-400 text-center">
+                Stay updated on all platforms
+              </p>
+            </div>
+          </div>
+        </div>
       </section>
     </main>
   );

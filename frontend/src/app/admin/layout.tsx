@@ -7,6 +7,7 @@ import Link from "next/link";
 import { cn } from "@/utils/cn";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import LogoutButton from "@/app/auth/LogoutButton";
+import { SocialLinks } from "@/components/shared/SocialLinks";
 
 const ADMIN_NAV = [
   { label: "Dashboard",          href: "/admin",                    icon: "📊" },
@@ -110,13 +111,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="px-3 py-4 border-t border-gray-100 dark:border-[#33334b] space-y-2">
-          <Link
-            href="/"
-            className="nav-item nav-item-idle text-xs"
-          >
+        <div className="px-3 py-4 border-t border-gray-100 dark:border-[#33334b] space-y-3">
+          <Link href="/" className="nav-item nav-item-idle text-xs">
             <span>🌐</span> View Public Site
           </Link>
+          <div className="px-1">
+            <SocialLinks size="xs" bare gap="gap-3" />
+          </div>
           <LogoutButton />
         </div>
       </aside>

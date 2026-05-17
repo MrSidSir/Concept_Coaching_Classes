@@ -6,7 +6,8 @@ import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
 import LogoutButton from "@/app/auth/LogoutButton";
 import { cn } from "@/utils/cn";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { ThemeToggle }  from "@/components/ui/ThemeToggle";
+import { SocialLinks }  from "@/components/shared/SocialLinks";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -89,6 +90,8 @@ export default function Header() {
 
         {/* Desktop Auth */}
         <div className="hidden lg:flex items-center gap-3">
+          <SocialLinks size="xs" bare gap="gap-1.5" />
+          <div className="w-px h-5 bg-gray-200 dark:bg-[#33334b]" />
           <ThemeToggle />
           {user ? (
             <>
