@@ -36,7 +36,15 @@
     min-height: 100vh;
     min-height: 100dvh;
     overflow-x: hidden;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    /*
+     * NO transition on initial load — prevents flash.
+     * Transition is re-enabled by JS after mount via .theme-ready class.
+     */
+  }
+
+  /* Smooth transitions only after JS has mounted (ThemeProvider adds this class) */
+  body.theme-ready {
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
   a { @apply no-underline; }

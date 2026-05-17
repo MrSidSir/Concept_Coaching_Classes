@@ -1,7 +1,10 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import {
+  getAuth, GoogleAuthProvider, FacebookAuthProvider,
+  type Auth,
+} from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 import { env } from "@/lib/env";
 
 const firebaseConfig = {
@@ -14,14 +17,38 @@ const firebaseConfig = {
   measurementId:     env.firebase.measurementId,
 };
 
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+// Guard: don't crash the entire app if Firebase isn't configured yet.
+// In production, env.ts will throw early if keys are missing.
+let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
+let storage: FirebaseStorage;
 
-export const auth    = getAuth(app);
-export const db      = getFirestore(app);
-export const storage = getStorage(app);
+try {
+  app     = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  auth    = getAuth(app);
+  db      = getFirestore(app);
+  storage = getStorage(app);
+} catch (err) {
+  if (process.env.NODE_ENV !== "production") {
+    console.warn(
+      "[Firebase] Initialization skipped — add real credentials to .env.local\n" +
+      "Copy frontend/.env.example → frontend/.env.local and fill in your Firebase values."
+    );
+  } else {
+    throw err;
+  }
+  // Provide typed stubs so imports don't break during local dev without credentials
+  app     = {} as FirebaseApp;
+  auth    = {} as Auth;
+  db      = {} as Firestore;
+  storage = {} as FirebaseStorage;
+}
+
+export { auth, db, storage };
 
 export const googleProvider   = new GoogleAuthProvider();
 export const facebookProvider = new FacebookAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account" });
+try { googleProvider.setCustomParameters({ prompt: "select_account" }); } catch {}
 
 export default app;

@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { AuthProvider }  from "@/context/AuthContext";
 import { Providers }     from "@/providers";
@@ -68,32 +67,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
+    /*
+     * suppressHydrationWarning is required on <html> because ThemeProvider
+     * adds/removes the `dark` class client-side. Without this, React would
+     * throw a hydration mismatch warning.
+     */
     <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth`}>
-      <body className="bg-white dark:bg-[#0a0a0f] min-h-screen flex flex-col font-sans antialiased transition-colors duration-300">
-        {/*
-          Anti-FOUC theme script — rendered by next/script with beforeInteractive strategy.
-          next/script moves this outside the React component tree so React never "sees" it,
-          eliminating the script-in-component warning entirely.
-          It runs synchronously before hydration, reading localStorage / OS preference
-          and applying the correct `dark` class to <html> with zero flash.
-        */}
-        <Script id="theme-init" strategy="beforeInteractive">{`
-          (function(){
-            try {
-              var t = localStorage.getItem('ccc-theme');
-              var d = document.documentElement;
-              var dark = t === 'dark' || ((!t || t === 'system') && window.matchMedia('(prefers-color-scheme:dark)').matches);
-              if (dark) {
-                d.classList.add('dark');
-                d.setAttribute('data-theme','dark');
-              } else {
-                d.classList.remove('dark');
-                d.setAttribute('data-theme','light');
-              }
-            } catch(e) {}
-          })();
-        `}</Script>
-
+      <body className="bg-white dark:bg-[#0a0a0f] min-h-screen flex flex-col font-sans antialiased">
         <Providers>
           <AuthProvider>
             <ErrorBoundary>
