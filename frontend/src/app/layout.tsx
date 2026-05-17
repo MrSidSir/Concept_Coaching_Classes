@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { AuthProvider }  from "@/context/AuthContext";
 import { Providers }     from "@/providers";
@@ -29,8 +30,8 @@ export const metadata: Metadata = {
     "mathematics", "JEE preparation", "NEET preparation", "Mr. Sidsir",
     "Concept Coaching Classes", "free notes", "online quiz",
   ],
-  authors: [{ name: "Mr. Sidsir", url: env.app.url }],
-  creator: "Mr. Sidsir",
+  authors:   [{ name: "Mr. Sidsir", url: env.app.url }],
+  creator:   "Mr. Sidsir",
   publisher: "Concept Coaching Classes",
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
   openGraph: {
@@ -59,23 +60,40 @@ export const viewport: Viewport = {
   width:        "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor:   [
+  themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)",  color: "#0a0a0f" },
   ],
 };
 
-/** Blocking script injected into <head> — prevents flash of wrong theme before hydration */
-const themeScript = `(function(){try{var t=localStorage.getItem('ccc-theme');var d=document.documentElement;if(t==='dark'||((!t||t==='system')&&window.matchMedia('(prefers-color-scheme:dark)').matches)){d.classList.add('dark');d.setAttribute('data-theme','dark');}else{d.classList.remove('dark');d.setAttribute('data-theme','light');}}catch(e){}})();`;
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth`}>
-      {/* eslint-disable-next-line @next/next/no-before-interactive-script-outside-document */}
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
       <body className="bg-white dark:bg-[#0a0a0f] min-h-screen flex flex-col font-sans antialiased transition-colors duration-300">
+        {/*
+          Anti-FOUC theme script — rendered by next/script with beforeInteractive strategy.
+          next/script moves this outside the React component tree so React never "sees" it,
+          eliminating the script-in-component warning entirely.
+          It runs synchronously before hydration, reading localStorage / OS preference
+          and applying the correct `dark` class to <html> with zero flash.
+        */}
+        <Script id="theme-init" strategy="beforeInteractive">{`
+          (function(){
+            try {
+              var t = localStorage.getItem('ccc-theme');
+              var d = document.documentElement;
+              var dark = t === 'dark' || ((!t || t === 'system') && window.matchMedia('(prefers-color-scheme:dark)').matches);
+              if (dark) {
+                d.classList.add('dark');
+                d.setAttribute('data-theme','dark');
+              } else {
+                d.classList.remove('dark');
+                d.setAttribute('data-theme','light');
+              }
+            } catch(e) {}
+          })();
+        `}</Script>
+
         <Providers>
           <AuthProvider>
             <ErrorBoundary>
