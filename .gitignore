@@ -1,0 +1,82 @@
+# ─── Dependencies ───────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─── Next.js Build ───────────────────────────────────────────────────────────
+.next/
+out/
+build/
+dist/
+
+# ─── Environment Variables (NEVER commit secrets) ────────────────────────────
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test
+.env.test.local
+.env.production
+.env.production.local
+.env.staging
+*.env
+!.env.example
+
+# ─── Firebase ────────────────────────────────────────────────────────────────
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+.firebase/
+firebase.json.local
+serviceAccount*.json
+*-serviceAccountKey.json
+google-services.json
+
+# ─── Testing ─────────────────────────────────────────────────────────────────
+coverage/
+.coverage/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ─── Logs ────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── Cache ───────────────────────────────────────────────────────────────────
+.cache/
+.turbo/
+.vercel/
+.swc/
+*.tsbuildinfo
+
+# ─── IDE / OS ────────────────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+desktop.ini
+
+# ─── TypeScript ──────────────────────────────────────────────────────────────
+*.js.map
+*.d.ts.map
+
+# ─── Uploads (local dev) ─────────────────────────────────────────────────────
+uploads/
+public/uploads/
+
+# ─── Misc ────────────────────────────────────────────────────────────────────
+*.pid
+*.seed
+*.pid.lock
+.yarn-integrity

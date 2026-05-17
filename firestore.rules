@@ -1,0 +1,91 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isAuth() && request.auth.uid == uid;
+    }
+
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return isAuth() && getUserRole() in ["admin", "super_admin"];
+    }
+
+    function isTeacher() {
+      return isAuth() && getUserRole() in ["teacher", "admin", "super_admin"];
+    }
+
+    function isStudent() {
+      return isAuth() && getUserRole() in ["student", "teacher", "admin", "super_admin"];
+    }
+
+    // Users collection
+    match /users/{uid} {
+      allow read: if isOwner(uid) || isAdmin();
+      allow create: if isOwner(uid);
+      allow update: if isOwner(uid) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // Courses
+    match /courses/{courseId} {
+      allow read: if true; // Public can browse courses
+      allow create, update, delete: if isTeacher();
+    }
+
+    // Videos
+    match /videos/{videoId} {
+      allow read: if true;
+      allow create, update, delete: if isTeacher();
+    }
+
+    // Notes
+    match /notes/{noteId} {
+      allow read: if isStudent();
+      allow create, update, delete: if isTeacher();
+    }
+
+    // Tests
+    match /tests/{testId} {
+      allow read: if isStudent();
+      allow create, update, delete: if isTeacher();
+    }
+
+    // Results
+    match /results/{resultId} {
+      allow read: if isAuth() && (
+        resource.data.studentId == request.auth.uid || isTeacher()
+      );
+      allow create: if isStudent();
+      allow update, delete: if isAdmin();
+    }
+
+    // Attendance
+    match /attendance/{doc} {
+      allow read: if isAuth();
+      allow write: if isTeacher();
+    }
+
+    // Announcements
+    match /announcements/{announcementId} {
+      allow read: if isAuth();
+      allow write: if isTeacher();
+    }
+
+    // Payments
+    match /payments/{paymentId} {
+      allow read: if isAuth() && (
+        resource.data.userId == request.auth.uid || isAdmin()
+      );
+      allow write: if isAdmin();
+    }
+  }
+}
